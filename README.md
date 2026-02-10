@@ -36,9 +36,12 @@ Track, quantify, and visualize technical debt in DevOps pipelines to reduce risk
 - Version Control: Git  
 - CI/CD: GitHub Actions  
 - Containerization: Docker  
-- Monitoring: Prometheus/Grafana  
-
+- Monitoring: Prometheus/Grafana
+  
 ---
+
+- Project CI pipeline working successfully.
+
 
 ## Getting Started
 
