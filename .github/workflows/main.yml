@@ -1,0 +1,30 @@
+# Workflow name shown in Actions Tab
+name: CI
+
+# Define when the workflow should run
+on:
+  push:
+    branches: [ main ]        # Run when code is pushed to main branch
+
+# Define the jobs to execute
+jobs:
+  build:                      # Job name
+    runs-on: ubuntu-latest    # Use Ubuntu virtual machine provided by GitHub
+
+    steps:
+      # 1: Download repository code to the runner
+      - uses: actions/checkout@v3
+
+      # 2: Install Python in the runner environment
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.8
+
+      # 3: Install project dependencies from requirements.txt
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      # 4: Run automated tests using pytest
+      - name: Run tests
+        run: pytest
