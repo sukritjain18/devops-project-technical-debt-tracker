@@ -1,11 +1,7 @@
-
 services:
   technical-debt-tracker:
     build: .
     ports:
       - "8080:8080"
-    # Comment out volumes for now
-    # volumes:
-    #   - .:/app
     environment:
       - PYTHONUNBUFFERED=1
