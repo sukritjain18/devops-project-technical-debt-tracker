@@ -1,10 +1,8 @@
-version: "3.9"
-
 services:
   technical-debt-tracker:
     build: .
     ports:
       - "8080:8080"
-    environment:
-      - PYTHONUNBUFFERED=1
-    command: python src/app.py
+    volumes:
+      - ./src:/app   
+    restart: always
