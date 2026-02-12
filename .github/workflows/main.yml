@@ -1,5 +1,5 @@
 # Workflow name shown in Actions Tab
-name: ci
+name: CI
 
 # Define when the workflow should run
 on:
