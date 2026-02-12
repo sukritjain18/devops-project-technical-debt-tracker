@@ -14,5 +14,5 @@ COPY . .
 EXPOSE 8080
 
 # Run the app
-CMD ["python", "src/app.py"]
+CMD ["python", "scripts/app.py"]
 
