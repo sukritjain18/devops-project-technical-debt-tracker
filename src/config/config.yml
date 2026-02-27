@@ -1,0 +1,9 @@
+app:
+  env: ${APP_ENV}
+
+database:
+  host: ${DB_HOST}
+  port: ${DB_PORT}
+
+api:
+  key: ${API_KEY}
