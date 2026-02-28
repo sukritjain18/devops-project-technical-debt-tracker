@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: technical-debt-tracker
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: technical-debt-tracker
+  template:
+    metadata:
+      labels:
+        app: technical-debt-tracker
+    spec:
+      containers:
+        - name: technical-debt-tracker
+          image: your-dockerhub-username/technical-debt-tracker:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: technical-debt-config
