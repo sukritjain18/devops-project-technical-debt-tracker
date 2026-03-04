@@ -1,5 +1,8 @@
 # Technical Debt Tracker
 
+![CI Status](https://github.com/sukritjain18/devops-project-technical-debt-tracker/actions/workflows/ci-cd.yml/badge.svg)
+
+
 **Student Name:** Sukrit Jain  
 **Registration No:** 23fe10cse00089  
 **Course:** CSE3253 DevOps [PE6]  
