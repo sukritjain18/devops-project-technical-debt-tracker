@@ -17,9 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Force Fail
-        run: exit 1
-
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
