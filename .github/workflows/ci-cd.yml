@@ -31,10 +31,19 @@ jobs:
         run: |
           flake8 src/ || true
 
-      - name: Run Tests
+      - name: Run Unit + Integration Tests
         run: |
-         export PYTHONPATH=$PYTHONPATH:.  
-         pytest --maxfail=1 --disable-warnings -q
+          export PYTHONPATH=$PYTHONPATH:.
+          pytest tests/unit tests/integration -q
+
+      - name: Start Flask App
+        run: |
+          python src/app.py &
+          sleep 5
+
+      - name: Run Selenium Tests
+        run: |
+          pytest tests/selenium -q
 
       - name: Build Docker Image
         run: |
