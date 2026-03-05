@@ -1,7 +1,7 @@
 # Technical Debt Tracker
 
 ![CI Status](https://github.com/sukritjain18/devops-project-technical-debt-tracker/actions/workflows/ci-cd.yml/badge.svg)
-![Top Language](https://img.shields.io/github/languages/top/sukritjain18/devops-project-technical-debt-tracker)
+
 ![License](https://img.shields.io/github/license/sukritjain18/devops-project-technical-debt-tracker)
 
 **Student Name:** Sukrit Jain  
