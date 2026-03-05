@@ -11,26 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: 3.14
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.14
 
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pytest coverage pytest-cov
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
 
-    - name: Run tests with coverage
-      run: |
-        coverage run -m pytest
-        coverage report
-        coverage xml  # needed for Codecov
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest
+          coverage report --fail-under=80
+          coverage xml  # needed for Codecov
 
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v4
-      with:
-        files: coverage.xml
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          files: coverage.xml
