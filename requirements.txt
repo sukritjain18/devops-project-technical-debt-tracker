@@ -1,3 +1,7 @@
-pytest
-flask
-python-dotenv
+flask                          
+python-dotenv                
+pytest                         
+pytest-cov                      
+requests                      
+selenium                  
+flake8         
