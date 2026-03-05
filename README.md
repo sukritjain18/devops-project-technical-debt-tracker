@@ -1,7 +1,8 @@
 # Technical Debt Tracker
 
 ![CI Status](https://github.com/sukritjain18/devops-project-technical-debt-tracker/actions/workflows/ci-cd.yml/badge.svg)
-
+![Top Language](https://img.shields.io/github/languages/top/sukritjain18/devops-project-technical-debt-tracker)
+![License](https://img.shields.io/github/license/sukritjain18/devops-project-technical-debt-tracker)
 
 **Student Name:** Sukrit Jain  
 **Registration No:** 23fe10cse00089  
@@ -21,11 +22,13 @@ Track, quantify, and visualize technical debt in DevOps pipelines to reduce risk
 - Identify technical debt in code repositories  
 - Visualize debt trends over time  
 - Integrate with CI/CD pipelines for real-time feedback  
+- Ensure application reliability using automated testing  
 
 ### Key Features
 - Debt scoring of codebases  
 - Dashboard visualization  
 - Alerts for increasing debt  
+- Automated testing integrated with CI/CD  
 
 ---
 
@@ -41,6 +44,7 @@ Track, quantify, and visualize technical debt in DevOps pipelines to reduce risk
 - CI/CD: GitHub Actions  
 - Containerization: Docker  
 - Monitoring: Prometheus & Grafana  
+- Testing: Pytest, Selenium  
 
 ---
 
@@ -101,19 +105,57 @@ python src/app.py
 ```
 devops-project-technical-debt-tracker/
 │
-├── README.md
-├── .gitignore
-├── LICENSE
+├── README.md                     # Project overview & instructions
+├── .gitignore                     # Git ignore rules
+├── LICENSE                        # MIT License
 │
-├── src/                     # Application source code
-├── docs/                    # Documentation files
-├── infrastructure/          # Docker / IaC configurations
-├── pipelines/               # CI/CD configurations
-├── tests/                   # Test suites
-├── monitoring/              # Monitoring & alert configs
-├── presentations/           # Presentation materials
-└── deliverables/            # Final submission files
+├── src/                           # Application source code
+│   ├── app.py                     # Flask app entrypoint
+│   ├── __init__.py                # Initialize app
+│   ├── config/                    # App configuration files
+│   ├── scripts/                   # Helper / setup scripts
+│   └── tests/                     # Internal tests for app components
+│
+├── tests/                         # External test suites
+│   ├── unit/                      # Unit tests (Pytest)
+│   ├── integration/               # Integration tests
+│   └── selenium/                  # Selenium browser tests
+│
+├── infrastructure/                # Docker / DevOps / deployment configs
+├── pipelines/                     # CI/CD workflow configurations
+├── monitoring/                    # Monitoring & alert configs (Nagios)
+├── docs/                          # Project documentation & diagrams
+├── presentations/                 # Presentation slides / visuals
+└── deliverables/                  # Submission-ready files
 ```
+
+---
+
+## Testing
+
+Automated testing is implemented to ensure that the application works correctly and that future changes do not break existing functionality.
+
+### Unit Testing
+- Implemented using **Pytest**
+- Tests verify individual components and API responses.
+
+Run tests locally:
+
+```bash
+pytest
+```
+
+### Integration Testing
+- Ensures that different components of the system work together correctly.
+- Validates interaction between the Flask API and application logic.
+
+### End-to-End Testing
+- Implemented using **Selenium**
+- Simulates browser interaction to verify that the application runs correctly from a user perspective.
+
+### CI/CD Test Integration
+All tests run automatically in the **GitHub Actions CI/CD pipeline** whenever code is pushed or a pull request is created.  
+If any test fails, the pipeline stops, ensuring only stable code is merged into the `main` branch.
 
 ---
 
@@ -141,8 +183,9 @@ API_KEY=your_api_key_here
 1. Code Quality Check (Linting & Static Analysis)  
 2. Build (Docker Image Build)  
 3. Unit Testing  
-4. Security Scan  
-5. Deployment (if configured)
+4. End-to-End Testing  
+5. Security Scan  
+6. Deployment (if configured)
 
 ### Trigger Conditions
 - Push to main branch  
@@ -151,11 +194,7 @@ API_KEY=your_api_key_here
 ---
 
 ## Monitoring
-
-- Prometheus for metrics collection  
-- Grafana for dashboard visualization  
-- Alert rules for detecting increasing technical debt  
-
+<!-- Prometheus & Grafana setup coming in future releases -->
 ---
 
 ## License
