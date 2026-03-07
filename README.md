@@ -4,11 +4,6 @@
 ![Test Coverage](coverage.svg)
 ![License](https://img.shields.io/github/license/sukritjain18/devops-project-technical-debt-tracker)
 
-## Test Coverage Report
-
-📊 Detailed HTML coverage report:  
-[Open Coverage Report](./htmlcov/index.html)
-
 **Student Name:** Sukrit Jain  
 **Registration No:** 23fe10cse00089  
 **Course:** CSE3253 DevOps [PE6]  
