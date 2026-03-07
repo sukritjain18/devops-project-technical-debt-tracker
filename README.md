@@ -6,8 +6,10 @@
 
 ## Test Coverage Report
 
-📊 Detailed HTML coverage report:
+📊 Detailed HTML coverage report:  
 [View Coverage Report](https://sukritjain18.github.io/devops-project-technical-debt-tracker/htmlcov/)
+
+---
 
 **Student Name:** Sukrit Jain  
 **Registration No:** 23fe10cse00089  
