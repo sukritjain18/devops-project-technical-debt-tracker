@@ -6,9 +6,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-app = Flask(__name__)
-
 logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+logger.info("Application started")
+
+app = Flask(__name__)
 
 APP_ENV = os.getenv("APP_ENV", "development")
 DB_HOST = os.getenv("DB_HOST", "localhost")
@@ -18,13 +21,13 @@ API_KEY = os.getenv("API_KEY", "default-api-key")
 
 @app.route("/")
 def home():
-    logging.info("Home endpoint accessed")
+    logger.info("Home endpoint accessed")
     return f"Technical Debt Tracker running in {APP_ENV} environment"
 
 
 @app.route("/api")
 def api_status():
-    logging.info("API status checked")
+    logger.info("API status checked")
     return jsonify({
         "status": "ok",
         "message": "API is working",
@@ -40,8 +43,10 @@ def secure_api():
     key = request.headers.get("x-api-key")
 
     if key != API_KEY:
-        logging.warning("Unauthorized API access attempt")
+        logger.warning("Unauthorized API access attempt")
         abort(401)
+
+    logger.info("Secure API accessed successfully")
 
     return jsonify({
         "message": "Authorized access",
@@ -51,7 +56,7 @@ def secure_api():
 
 @app.route("/metrics")
 def metrics():
-    logging.info("Metrics endpoint accessed")
+    logger.info("Metrics endpoint accessed")
 
     data = {
         "cpu_usage_percent": psutil.cpu_percent(),
@@ -61,8 +66,11 @@ def metrics():
 
     return jsonify(data)
 
+
 @app.route("/health")
 def health():
+    logger.info("Health check endpoint accessed")
+
     return jsonify({
         "status": "healthy",
         "environment": APP_ENV
@@ -70,4 +78,5 @@ def health():
 
 
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", port=8080) 
+    logger.info("Starting Flask server on port 8080")
+    app.run(host="0.0.0.0", port=8080)
