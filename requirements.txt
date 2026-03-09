@@ -4,4 +4,5 @@ pytest
 pytest-cov                      
 requests                      
 selenium                  
-flake8         
+flake8  
+psutil     
