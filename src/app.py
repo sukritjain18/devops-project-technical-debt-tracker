@@ -11,13 +11,22 @@ load_dotenv()
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
-# Configure logging
-logger = logging.getLogger(__name__)
+logger = logging.getLogger()   #root logger
 logger.setLevel(logging.INFO)
 
-file_handler = logging.FileHandler("logs/application.log")
-console_handler = logging.StreamHandler()
+# Clear old handlers 
+if logger.hasHandlers():
+    logger.handlers.clear()
 
+# File handler (writes logs to file)
+file_handler = logging.FileHandler("logs/application.log")
+file_handler.setLevel(logging.INFO)
+
+# Console handler (prints logs in terminal)
+console_handler = logging.StreamHandler()
+console_handler.setLevel(logging.INFO)
+
+# Log format
 formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(message)s"
 )
@@ -25,6 +34,7 @@ formatter = logging.Formatter(
 file_handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
+# Add handlers
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
