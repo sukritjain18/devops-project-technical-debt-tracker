@@ -3,26 +3,34 @@ import os
 import psutil
 import logging
 from dotenv import load_dotenv
+from logging.handlers import TimedRotatingFileHandler
 
 # Load environment variables
 load_dotenv()
 
-# Create logs folder
+# Create logs folder if not exists
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
-logger = logging.getLogger()   #root logger
+# Configure ROOT logger
+logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Clear old handlers 
+# Remove duplicate handlers 
 if logger.hasHandlers():
     logger.handlers.clear()
 
-# File handler (writes logs to file)
-file_handler = logging.FileHandler("logs/application.log")
+# File handler (rotates daily, keeps 30 days)
+file_handler = TimedRotatingFileHandler(
+    "logs/application.log",
+    when="midnight",
+    interval=1,
+    backupCount=30,
+    encoding="utf-8"
+)
 file_handler.setLevel(logging.INFO)
 
-# Console handler (prints logs in terminal)
+# Console handler 
 console_handler = logging.StreamHandler()
 console_handler.setLevel(logging.INFO)
 
@@ -110,4 +118,4 @@ def health():
 
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
-    app.run(host="0.0.0.0", port=8080)
+    app.run(host="0.0.0.0", port=8080, debug=False)
