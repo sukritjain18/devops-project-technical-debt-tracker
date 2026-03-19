@@ -147,6 +147,11 @@ def health():
         "environment": APP_ENV
     }), 200
 
+@app.route("/test-email")
+def test_email():
+    send_alert_email("Test Alert", "Email is working!")
+    return "Email sent!"
+
 # Run app
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
