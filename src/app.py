@@ -71,6 +71,7 @@ disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
 def send_alert_email(subject, body):
     try:
+        with app.app_context():
         recipient = os.getenv("MAIL_USERNAME")  # from .env
 
         print("Sending email to:", recipient)  # debug
