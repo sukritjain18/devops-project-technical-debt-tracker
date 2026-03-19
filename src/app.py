@@ -68,16 +68,26 @@ memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
 # Email alert function
+
 def send_alert_email(subject, body):
     try:
+        recipient = os.getenv("MAIL_USERNAME")  # from .env
+
+        print("Sending email to:", recipient)  # debug
+
         msg = Message(
             subject=subject,
-            recipients=[os.getenv("MAIL_USERNAME")]  # send to yourself
+            recipients=[recipient]
         )
         msg.body = body
+
         mail.send(msg)
+
+        print("EMAIL SENT SUCCESSFULLY")
         logger.info("Alert email sent")
+
     except Exception as e:
+        print("EMAIL ERROR:", e)
         logger.error(f"Email failed: {e}")
 
 # Background metrics + alert monitoring
