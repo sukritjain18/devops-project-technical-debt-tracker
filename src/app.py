@@ -1,4 +1,3 @@
-# src/app.py
 from flask import Flask, jsonify, request, abort, Response
 import os
 import psutil
@@ -9,10 +8,15 @@ from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
 import threading
 import time
 from flask_mail import Mail, Message
-import os
-from dotenv import load_dotenv
 
 load_dotenv()
+
+app = Flask(__name__)
+
+APP_ENV = os.getenv("APP_ENV", "development")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_PORT = os.getenv("DB_PORT", "5432")
+API_KEY = os.getenv("API_KEY", "default-api-key")
 
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
@@ -23,23 +27,15 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
 
-
-# Load environment variables
-load_dotenv()
-
-# Create logs folder if not exists
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
-# Configure ROOT logger
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
-# Remove duplicate handlers 
 if logger.hasHandlers():
     logger.handlers.clear()
 
-# File handler (rotates daily, keeps 30 days)
 file_handler = TimedRotatingFileHandler(
     "logs/application.log",
     when="midnight",
@@ -47,53 +43,44 @@ file_handler = TimedRotatingFileHandler(
     backupCount=30,
     encoding="utf-8"
 )
-file_handler.setLevel(logging.INFO)
 
-# Console handler 
 console_handler = logging.StreamHandler()
-console_handler.setLevel(logging.INFO)
 
-# Log format
 formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(message)s"
 )
+
 file_handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
-# Add handlers
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
 logger.info("Application started")
 
-# Initialize Flask app
-app = Flask(__name__)
-
-# Environment variables
-APP_ENV = os.getenv("APP_ENV", "development")
-DB_HOST = os.getenv("DB_HOST", "localhost")
-DB_PORT = os.getenv("DB_PORT", "5432")
-API_KEY = os.getenv("API_KEY", "default-api-key")
-
-# Prometheus Metrics Setup
 cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
 memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
 def update_metrics():
-    """Continuously update CPU, memory, and disk metrics"""
     while True:
         cpu_usage.set(psutil.cpu_percent(interval=1))
         memory_usage.set(psutil.virtual_memory().percent)
         disk_usage.set(psutil.disk_usage('/').percent)
         time.sleep(1)
 
-# Start background thread
 thread = threading.Thread(target=update_metrics)
 thread.daemon = True
 thread.start()
 
-# Routes
+def send_alert(subject, body):
+    try:
+        msg = Message(subject=subject, recipients=[os.getenv("ALERT_EMAIL")])
+        msg.body = body
+        mail.send(msg)
+        logger.info("Alert email sent")
+    except Exception as e:
+        logger.error(f"Failed to send email: {e}")
 
 @app.route("/")
 def home():
@@ -118,6 +105,7 @@ def secure_api():
     if key != API_KEY:
         logger.warning("Unauthorized API access attempt")
         abort(401)
+
     logger.info("Secure API accessed successfully")
     return jsonify({
         "message": "Authorized access",
@@ -126,18 +114,15 @@ def secure_api():
 
 @app.route("/metrics")
 def metrics():
-    logger.info("Metrics endpoint accessed")
     return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 @app.route("/health")
 def health():
-    logger.info("Health check endpoint accessed")
     return jsonify({
         "status": "healthy",
         "environment": APP_ENV
     }), 200
 
-# Run Flask app
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
     app.run(host="0.0.0.0", port=8080, debug=False)
