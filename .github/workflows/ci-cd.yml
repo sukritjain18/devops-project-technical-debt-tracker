@@ -32,10 +32,10 @@ jobs:
       - name: Run Lint
         run: flake8 src/ || true
 
-      - name: Run Unit + Integration Tests with Coverage
+      - name: Run Unit + Integration + Selenium Tests with Coverage
         run: |
           export PYTHONPATH=$PYTHONPATH:.
-          pytest tests/unit tests/integration --cov=src --cov-report=xml --cov-report=term
+          pytest tests/unit tests/integration tests/selenium --cov=src --cov-report=xml --cov-report=term
 
       - name: Generate Coverage Badge
         run: |
