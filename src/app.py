@@ -9,15 +9,18 @@ import threading
 import time
 from flask_mail import Mail, Message
 
+# Load environment variables
 load_dotenv()
 
 app = Flask(__name__)
 
+# Environment variables
 APP_ENV = os.getenv("APP_ENV", "development")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 API_KEY = os.getenv("API_KEY", "default-api-key")
 
+# Email configuration
 app.config['MAIL_SERVER'] = 'smtp.gmail.com'
 app.config['MAIL_PORT'] = 587
 app.config['MAIL_USE_TLS'] = True
@@ -27,17 +30,7 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
 
-def send_alert_email(subject, body):
-    try:
-        msg = Message(
-            subject=subject,
-            recipients=[os.getenv("MAIL_USERNAME")]  # sends to yourself
-        )
-        msg.body = body
-        mail.send(msg)
-    except Exception as e:
-        logger.error(f"Email failed: {e}")
-
+# Logging setup
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
@@ -69,30 +62,50 @@ logger.addHandler(console_handler)
 
 logger.info("Application started")
 
+# Prometheus metrics
 cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
 memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
-def update_metrics():
-    while True:
-        cpu_usage.set(psutil.cpu_percent(interval=1))
-        memory_usage.set(psutil.virtual_memory().percent)
-        disk_usage.set(psutil.disk_usage('/').percent)
-        time.sleep(1)
-
-thread = threading.Thread(target=update_metrics)
-thread.daemon = True
-thread.start()
-
-def send_alert(subject, body):
+# Email alert function
+def send_alert_email(subject, body):
     try:
-        msg = Message(subject=subject, recipients=[os.getenv("ALERT_EMAIL")])
+        msg = Message(
+            subject=subject,
+            recipients=[os.getenv("MAIL_USERNAME")]  # send to yourself
+        )
         msg.body = body
         mail.send(msg)
         logger.info("Alert email sent")
     except Exception as e:
-        logger.error(f"Failed to send email: {e}")
+        logger.error(f"Email failed: {e}")
 
+# Background metrics + alert monitoring
+def update_metrics():
+    while True:
+        cpu = psutil.cpu_percent(interval=1)
+        memory = psutil.virtual_memory().percent
+        disk = psutil.disk_usage('/').percent
+
+        cpu_usage.set(cpu)
+        memory_usage.set(memory)
+        disk_usage.set(disk)
+
+        # Alert condition
+        if cpu > 80:
+            send_alert_email(
+                "High CPU Alert",
+                f"CPU usage is {cpu}%"
+            )
+
+        time.sleep(1)
+
+# Start background thread
+thread = threading.Thread(target=update_metrics)
+thread.daemon = True
+thread.start()
+
+# Routes
 @app.route("/")
 def home():
     logger.info("Home endpoint accessed")
@@ -134,6 +147,7 @@ def health():
         "environment": APP_ENV
     }), 200
 
+# Run app
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
     app.run(host="0.0.0.0", port=8080, debug=False)
