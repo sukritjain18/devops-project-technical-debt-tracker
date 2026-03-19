@@ -4,7 +4,7 @@ on:
   push:
     branches: [ main ]
     paths-ignore:
-    - 'README.md'
+      - 'README.md'
   pull_request:
     branches: [ main ]
 
@@ -15,8 +15,6 @@ jobs:
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
-        with:
-          persist-credentials: false  
 
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -27,15 +25,18 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest-cov
+          pip install pytest-cov selenium
 
-      - name: Run Lint
-        run: flake8 src/ || true
-
-      - name: Run Unit + Integration Tests with Coverage
+      - name: Start Flask App
         run: |
-          export PYTHONPATH=$PYTHONPATH:.
-          pytest tests/unit tests/integration --cov=src --cov-report=xml --cov-report=term
+          export PYTHONPATH=$PYTHONPATH:./src
+          python src/app.py &
+          sleep 5
+
+      - name: Run All Tests with Coverage
+        run: |
+          export PYTHONPATH=$PYTHONPATH:./src
+          pytest tests/unit tests/integration tests/selenium --cov=src --cov-report=xml --cov-report=term
 
       - name: Generate Coverage Badge
         run: |
@@ -49,7 +50,6 @@ jobs:
           </svg>
           EOF
 
-      # 7. Commit Coverage Badge using PAT
       - name: Commit Coverage Badge
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
@@ -58,16 +58,5 @@ jobs:
           git commit -m "chore: update coverage badge" || echo "No changes to commit"
           git push https://x-access-token:${{ secrets.PAT_TOKEN }}@github.com/${{ github.repository }} HEAD:main
 
-      # 8. Start Flask App
-      - name: Start Flask App
-        run: |
-          python src/app.py &
-          sleep 5
-
-      # 9. Run Selenium Tests
-      - name: Run Selenium Tests
-        run: pytest tests/selenium -q
-
-      # 10. Build Docker Image
       - name: Build Docker Image
         run: docker build -t technical-debt-tracker .
