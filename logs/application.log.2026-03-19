@@ -1,0 +1,120 @@
+2026-03-19 09:43:38,277 - INFO - Application started
+2026-03-19 09:43:38,286 - INFO - Starting Flask server on port 8080
+2026-03-19 09:43:38,354 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.224:8080
+2026-03-19 09:43:38,354 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 09:52:21,476 - INFO - Metrics endpoint accessed
+2026-03-19 09:52:21,484 - INFO - 127.0.0.1 - - [19/Mar/2026 09:52:21] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 09:52:22,189 - INFO - 127.0.0.1 - - [19/Mar/2026 09:52:22] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-19 09:52:52,929 - INFO - Metrics endpoint accessed
+2026-03-19 09:52:52,935 - INFO - 127.0.0.1 - - [19/Mar/2026 09:52:52] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 09:53:41,309 - INFO - Application started
+2026-03-19 09:53:41,313 - INFO - Starting Flask server on port 8080
+2026-03-19 09:53:41,336 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.224:8080
+2026-03-19 09:53:41,337 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 09:54:14,689 - INFO - Metrics endpoint accessed
+2026-03-19 09:54:14,695 - INFO - 127.0.0.1 - - [19/Mar/2026 09:54:14] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 09:54:42,060 - INFO - Metrics endpoint accessed
+2026-03-19 09:54:42,063 - INFO - 127.0.0.1 - - [19/Mar/2026 09:54:42] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 09:55:20,894 - INFO - Metrics endpoint accessed
+2026-03-19 09:55:20,895 - INFO - 127.0.0.1 - - [19/Mar/2026 09:55:20] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 10:27:42,002 - INFO - Application started
+2026-03-19 10:27:42,006 - INFO - Starting Flask server on port 8080
+2026-03-19 10:27:42,034 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.224:8080
+2026-03-19 10:27:42,034 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 10:27:47,042 - INFO - Metrics endpoint accessed
+2026-03-19 10:27:47,044 - INFO - 127.0.0.1 - - [19/Mar/2026 10:27:47] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 10:29:57,941 - INFO - Application started
+2026-03-19 10:29:57,947 - INFO - Starting Flask server on port 8080
+2026-03-19 10:29:57,972 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.224:8080
+2026-03-19 10:29:57,973 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 10:30:01,595 - INFO - Metrics endpoint accessed
+2026-03-19 10:30:01,598 - INFO - 127.0.0.1 - - [19/Mar/2026 10:30:01] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 12:32:43,110 - INFO - Application started
+2026-03-19 12:32:43,121 - INFO - Starting Flask server on port 8080
+2026-03-19 12:32:43,181 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.58.139.240:8080
+2026-03-19 12:32:43,182 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 12:32:49,217 - INFO - Home endpoint accessed
+2026-03-19 12:32:49,219 - INFO - 10.58.139.240 - - [19/Mar/2026 12:32:49] "GET / HTTP/1.1" 200 -
+2026-03-19 12:32:49,325 - INFO - 10.58.139.240 - - [19/Mar/2026 12:32:49] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-19 12:33:28,876 - INFO - Home endpoint accessed
+2026-03-19 12:33:28,879 - INFO - 127.0.0.1 - - [19/Mar/2026 12:33:28] "GET / HTTP/1.1" 200 -
+2026-03-19 12:33:28,945 - INFO - 127.0.0.1 - - [19/Mar/2026 12:33:28] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-19 12:34:10,621 - INFO - Secure API accessed successfully
+2026-03-19 12:34:10,623 - INFO - 127.0.0.1 - - [19/Mar/2026 12:34:10] "GET /secure-api HTTP/1.1" 200 -
+2026-03-19 12:34:11,075 - INFO - Secure API accessed successfully
+2026-03-19 12:34:11,077 - INFO - 127.0.0.1 - - [19/Mar/2026 12:34:11] "GET /secure-api HTTP/1.1" 200 -
+2026-03-19 12:34:24,229 - INFO - Metrics endpoint accessed
+2026-03-19 12:34:24,230 - INFO - 127.0.0.1 - - [19/Mar/2026 12:34:24] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 17:47:05,049 - INFO - Application started
+2026-03-19 17:47:05,054 - INFO - Starting Flask server on port 8080
+2026-03-19 17:47:05,133 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 17:47:05,134 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 17:47:58,697 - INFO - 127.0.0.1 - - [19/Mar/2026 17:47:58] "GET /metrics HTTP/1.1" 200 -
+2026-03-19 17:47:58,753 - INFO - 127.0.0.1 - - [19/Mar/2026 17:47:58] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-19 17:51:33,702 - INFO - 127.0.0.1 - - [19/Mar/2026 17:51:33] "[33mGET /test-email HTTP/1.1[0m" 404 -
+2026-03-19 17:53:11,276 - INFO - Application started
+2026-03-19 17:53:11,280 - INFO - Starting Flask server on port 8080
+2026-03-19 17:53:11,307 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 17:53:11,308 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 17:53:22,750 - ERROR - Email failed: The message does not specify a sender and a default sender has not been configured
+2026-03-19 17:53:22,754 - INFO - 127.0.0.1 - - [19/Mar/2026 17:53:22] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:02:29,524 - INFO - Application started
+2026-03-19 18:02:29,528 - INFO - Starting Flask server on port 8080
+2026-03-19 18:02:29,546 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 18:02:29,547 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 18:02:39,835 - ERROR - Email failed: The message does not specify a sender and a default sender has not been configured
+2026-03-19 18:02:39,838 - INFO - 127.0.0.1 - - [19/Mar/2026 18:02:39] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:04:09,586 - INFO - Application started
+2026-03-19 18:04:09,590 - INFO - Starting Flask server on port 8080
+2026-03-19 18:04:09,619 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 18:04:09,620 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 18:04:18,992 - ERROR - Email failed: The message does not specify a sender and a default sender has not been configured
+2026-03-19 18:04:18,994 - INFO - 127.0.0.1 - - [19/Mar/2026 18:04:18] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:04:23,115 - ERROR - Email failed: The message does not specify a sender and a default sender has not been configured
+2026-03-19 18:04:23,117 - INFO - 127.0.0.1 - - [19/Mar/2026 18:04:23] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:12:48,139 - INFO - Application started
+2026-03-19 18:12:48,143 - INFO - Starting Flask server on port 8080
+2026-03-19 18:12:48,170 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 18:12:48,172 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 18:13:11,651 - ERROR - Email failed: The message does not specify a sender and a default sender has not been configured
+2026-03-19 18:13:11,653 - INFO - 127.0.0.1 - - [19/Mar/2026 18:13:11] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:16:27,635 - INFO - Application started
+2026-03-19 18:16:27,639 - INFO - Starting Flask server on port 8080
+2026-03-19 18:16:27,659 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-19 18:16:27,660 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-19 18:16:40,098 - INFO - Alert email sent
+2026-03-19 18:16:40,101 - INFO - 127.0.0.1 - - [19/Mar/2026 18:16:40] "GET /test-email HTTP/1.1" 200 -
+2026-03-19 18:21:09,988 - INFO - 127.0.0.1 - - [19/Mar/2026 18:21:09] "GET /metrics HTTP/1.1" 200 -

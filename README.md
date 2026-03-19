@@ -195,8 +195,30 @@ API_KEY=your_api_key_here
 
 ---
 
-## Monitoring
-<!-- Prometheus & Grafana setup coming in future releases -->
+## Monitoring & Logging
+
+### Monitoring Setup
+- Tool: **Nagios**  
+- Host: `devops-app` (Technical Debt Tracker)  
+- Services monitored: HTTP endpoint, CPU load, Disk usage  
+- Alerts triggered for:
+  1. CPU usage exceeds 80%
+  2. Disk usage exceeds 85%
+  3. Application HTTP endpoint becomes unreachable
+  4. Application response time exceeds 2 seconds
+
+### Alerts & Notification Channels
+- Email notifications  
+
+### Logging
+- Logs stored in `logs/` directory  
+- Structured JSON logging  
+- Log Rotation: Daily  
+- Retention Period: 30 days (older logs automatically deleted)  
+
+**Purpose:**  
+Maintain observability of the application while preventing excessive storage usage.  
+
 ---
 
 ## License
