@@ -13,10 +13,8 @@ spec:
         app: technical-debt-tracker
     spec:
       containers:
-        - name: technical-debt-tracker
-          image: technical-debt-tracker:latest   
-          ports:
-            - containerPort: 8080
-          envFrom:
-            - configMapRef:
-                name: technical-debt-config
+       - name: technical-debt-tracker
+    image: technical-debt-tracker:latest  
+    imagePullPolicy: Never                 
+    ports:
+      - containerPort: 8080
