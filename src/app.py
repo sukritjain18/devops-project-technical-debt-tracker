@@ -72,20 +72,21 @@ disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 def send_alert_email(subject, body):
     try:
         with app.app_context():
-        recipient = os.getenv("MAIL_USERNAME")  # from .env
 
-        print("Sending email to:", recipient)  # debug
+            recipient = os.getenv("MAIL_USERNAME")
 
-        msg = Message(
-            subject=subject,
-            recipients=[recipient]
-        )
-        msg.body = body
+            print("Sending email to:", recipient)
 
-        mail.send(msg)
+            msg = Message(
+                subject=subject,
+                recipients=[recipient]
+            )
+            msg.body = body
 
-        print("EMAIL SENT SUCCESSFULLY")
-        logger.info("Alert email sent")
+            mail.send(msg)
+
+            print("EMAIL SENT SUCCESSFULLY")
+            logger.info("Alert email sent")
 
     except Exception as e:
         print("EMAIL ERROR:", e)
