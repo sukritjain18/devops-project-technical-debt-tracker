@@ -1,9 +1,14 @@
-from flask import Flask, jsonify, request, abort
+# src/app.py
+from flask import Flask, jsonify, request, abort, Response
 import os
 import psutil
 import logging
 from dotenv import load_dotenv
 from logging.handlers import TimedRotatingFileHandler
+from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
+import threading
+import time
+
 
 # Load environment variables
 load_dotenv()
@@ -38,7 +43,6 @@ console_handler.setLevel(logging.INFO)
 formatter = logging.Formatter(
     "%(asctime)s - %(levelname)s - %(message)s"
 )
-
 file_handler.setFormatter(formatter)
 console_handler.setFormatter(formatter)
 
@@ -57,12 +61,30 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 API_KEY = os.getenv("API_KEY", "default-api-key")
 
+# Prometheus Metrics Setup
+cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
+memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
+disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
+
+def update_metrics():
+    """Continuously update CPU, memory, and disk metrics"""
+    while True:
+        cpu_usage.set(psutil.cpu_percent(interval=1))
+        memory_usage.set(psutil.virtual_memory().percent)
+        disk_usage.set(psutil.disk_usage('/').percent)
+        time.sleep(1)
+
+# Start background thread
+thread = threading.Thread(target=update_metrics)
+thread.daemon = True
+thread.start()
+
+# Routes
 
 @app.route("/")
 def home():
     logger.info("Home endpoint accessed")
     return f"Technical Debt Tracker running in {APP_ENV} environment"
-
 
 @app.route("/api")
 def api_status():
@@ -76,46 +98,32 @@ def api_status():
         }
     })
 
-
 @app.route("/secure-api")
 def secure_api():
     key = request.headers.get("x-api-key")
-
     if key != API_KEY:
         logger.warning("Unauthorized API access attempt")
         abort(401)
-
     logger.info("Secure API accessed successfully")
-
     return jsonify({
         "message": "Authorized access",
         "environment": APP_ENV
     })
 
-
 @app.route("/metrics")
 def metrics():
     logger.info("Metrics endpoint accessed")
-
-    data = {
-        "cpu_usage_percent": psutil.cpu_percent(),
-        "memory_usage_percent": psutil.virtual_memory().percent,
-        "disk_usage_percent": psutil.disk_usage('/').percent
-    }
-
-    return jsonify(data)
-
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 @app.route("/health")
 def health():
     logger.info("Health check endpoint accessed")
-
     return jsonify({
         "status": "healthy",
         "environment": APP_ENV
     }), 200
 
-
+# Run Flask app
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
     app.run(host="0.0.0.0", port=8080, debug=False)
