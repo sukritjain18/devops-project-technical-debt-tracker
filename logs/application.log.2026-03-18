@@ -1,0 +1,25 @@
+2026-03-18 11:49:32,137 - INFO - Application started
+2026-03-18 11:49:32,147 - INFO - Starting Flask server on port 8080
+2026-03-18 11:55:45,868 - INFO - Application started
+2026-03-18 11:55:45,872 - INFO - Starting Flask server on port 8080
+2026-03-18 12:02:38,320 - INFO - Application started
+2026-03-18 12:02:38,325 - INFO - Starting Flask server on port 8080
+2026-03-18 12:02:38,358 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.58.122.189:8080
+2026-03-18 12:02:38,359 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-18 12:07:04,021 - INFO - Application started
+2026-03-18 12:07:04,027 - INFO - Starting Flask server on port 8080
+2026-03-18 12:07:04,056 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.58.122.189:8080
+2026-03-18 12:07:04,056 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-18 12:07:30,585 - INFO - Metrics endpoint accessed
+2026-03-18 12:07:30,592 - INFO - 127.0.0.1 - - [18/Mar/2026 12:07:30] "GET /metrics HTTP/1.1" 200 -
+2026-03-18 12:07:30,645 - INFO - 127.0.0.1 - - [18/Mar/2026 12:07:30] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-18 12:07:55,037 - INFO - Metrics endpoint accessed
+2026-03-18 12:07:55,039 - INFO - 10.58.122.189 - - [18/Mar/2026 12:07:55] "GET /metrics HTTP/1.1" 200 -
+2026-03-18 12:08:16,199 - INFO - API status checked
+2026-03-18 12:08:16,201 - INFO - 127.0.0.1 - - [18/Mar/2026 12:08:16] "GET /api HTTP/1.1" 200 -
