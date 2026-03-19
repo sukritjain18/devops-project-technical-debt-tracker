@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: technical-debt-tracker
-          image: your-dockerhub-username/technical-debt-tracker:latest
+          image: technical-debt-tracker:latest   
           ports:
             - containerPort: 8080
           envFrom:
