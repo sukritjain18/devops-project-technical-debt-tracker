@@ -57,6 +57,8 @@ DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 API_KEY = os.getenv("API_KEY", "default-api-key")
 
+ALERT_TEST_MODE = True
+
 
 @app.route("/")
 def home():
@@ -108,13 +110,19 @@ def metrics():
 
 @app.route("/health")
 def health():
+    if ALERT_TEST_MODE:
+        logger.error("Application unhealthy - alert test triggered")
+        return jsonify({
+            "status": "unhealthy",
+            "reason": "Alert test mode enabled"
+        }), 500
+
     logger.info("Health check endpoint accessed")
 
     return jsonify({
         "status": "healthy",
         "environment": APP_ENV
-    }), 200
-
+    }), 200,
 
 if __name__ == "__main__":
     logger.info("Starting Flask server on port 8080")
