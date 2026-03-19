@@ -27,6 +27,17 @@ app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
 
 mail = Mail(app)
 
+def send_alert_email(subject, body):
+    try:
+        msg = Message(
+            subject=subject,
+            recipients=[os.getenv("MAIL_USERNAME")]  # sends to yourself
+        )
+        msg.body = body
+        mail.send(msg)
+    except Exception as e:
+        logger.error(f"Email failed: {e}")
+
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
