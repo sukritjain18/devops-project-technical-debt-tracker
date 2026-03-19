@@ -4,11 +4,6 @@
 ![Test Coverage](coverage.svg)
 ![License](https://img.shields.io/github/license/sukritjain18/devops-project-technical-debt-tracker)
 
-## Test Coverage Report
-
-📊 Detailed HTML coverage report:  
-[View Coverage Report](https://sukritjain18.github.io/devops-project-technical-debt-tracker/htmlcov/)
-
 ---
 
 **Student Name:** Sukrit Jain  
