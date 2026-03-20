@@ -216,6 +216,65 @@ API_KEY=your_api_key_here
 - Log Rotation: Daily  
 - Retention Period: 30 days (older logs automatically deleted)  
 
+---
+
+## Kubernetes Deployment
+
+### Prerequisites
+- Kubernetes installed and running (Minikube, Docker Desktop, or any cluster)  
+- `kubectl` CLI configured to point to your cluster  
+- Docker images for the app are built and accessible to the cluster  
+
+---
+
+### Check Cluster Status
+# View cluster info
+kubectl cluster-info
+
+# List all nodes
+kubectl get nodes
+
+---
+
+### Apply Kubernetes Manifests
+# Apply all manifests in your Kubernetes folder
+kubectl apply -f C:\Users\DELL\OneDrive\Documents\GitHub\devops-project-technical-debt-tracker\infrastructure\kubernetes
+
+# Verify deployments, services, pods, and all resources
+kubectl get deploy,svc,pods
+kubectl get all
+
+Note: If the output says 'unchanged', your resources are already applied and up-to-date.
+
+---
+
+### Access the Application
+# Use port-forwarding to access locally
+kubectl port-forward svc/technical-debt-tracker-service 8080:8080
+
+Then open in your browser:
+http://localhost:8080
+
+Recommended: Use port-forwarding for local clusters like Minikube or Docker Desktop. NodePort may not work reliably on Windows.
+
+---
+
+### Debugging Pods
+# List all pods in all namespaces
+kubectl get pods --all-namespaces
+
+# View logs for a specific pod
+kubectl logs <pod-name>
+
+# Describe pod for detailed info
+kubectl describe pod <pod-name>
+
+---
+
+### Delete Resources (Optional)
+# Delete all deployed resources from the Kubernetes folder
+kubectl delete -f C:\Users\DELL\OneDrive\Documents\GitHub\devops-project-technical-debt-tracker\infrastructure\kubernetes
+
 **Purpose:**  
 Maintain observability of the application while preventing excessive storage usage.  
 
