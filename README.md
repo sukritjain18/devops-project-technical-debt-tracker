@@ -216,34 +216,42 @@ API_KEY=your_api_key_here
 - Log Rotation: Daily  
 - Retention Period: 30 days (older logs automatically deleted)  
 
-### Kubernetes Deployment
+## Kubernetes Deployment
 
-```powershell
-# Check Cluster Status
+### 1. Check Cluster Status
+
 # View cluster info
+
+```bash
 kubectl cluster-info
 
 # List all nodes
 kubectl get nodes
+```
 
-# Apply Kubernetes Manifests
+### 2. Apply Kubernetes Manifests
+
+```bash
 # Apply all manifests in your Kubernetes folder
 kubectl apply -f C:\Users\DELL\OneDrive\Documents\GitHub\devops-project-technical-debt-tracker\infrastructure\kubernetes
 
 # Verify deployments, services, pods, and all resources
 kubectl get deploy,svc,pods
 kubectl get all
-# Note: If the output says unchanged, your resources are already applied and up-to-date.
+```
 
-# Access the Application
+### 3. Access the Application
+```bash
 # Use port-forwarding to access locally
 kubectl port-forward svc/technical-debt-tracker-service 8080:8080
 
-# Web Interface: http://localhost:8080
-# API: http://localhost:8080/api
-# Recommended: Use port-forwarding for local clusters like Minikube or Docker Desktop. NodePort may not work reliably on Windows.
+Web Interface: http://localhost:8080
 
-# Debugging Pods
+API: http://localhost:8080/api
+```
+
+### 4. Debugging Pods
+```bash
 # List all pods in all namespaces
 kubectl get pods --all-namespaces
 
@@ -252,10 +260,13 @@ kubectl logs <pod-name>
 
 # Describe pod for detailed info
 kubectl describe pod <pod-name>
+```
 
-# Delete Resources (Optional)
+### 5. Delete Resources (Optional)
+```bash
 # Delete all deployed resources from the Kubernetes folder
 kubectl delete -f C:\Users\DELL\OneDrive\Documents\GitHub\devops-project-technical-debt-tracker\infrastructure\kubernetes
+```
 
 **Purpose:**  
 Maintain observability of the application while preventing excessive storage usage.  
