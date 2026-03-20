@@ -268,6 +268,8 @@ kubectl describe pod <pod-name>
 kubectl delete -f C:\Users\DELL\OneDrive\Documents\GitHub\devops-project-technical-debt-tracker\infrastructure\kubernetes
 ```
 
+---
+
 **Purpose:**  
 Maintain observability of the application while preventing excessive storage usage.  
 
