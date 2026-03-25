@@ -67,50 +67,54 @@ cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
 memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
-# Email alert function
-
+# Email alert function (SAFE VERSION)
 def send_alert_email(subject, body):
     try:
+        username = os.getenv("MAIL_USERNAME")
+        password = os.getenv("MAIL_PASSWORD")
+
+        if not username or not password:
+            logger.warning("Email not configured, skipping alert")
+            return
+
         with app.app_context():
-
-            recipient = os.getenv("MAIL_USERNAME")
-
-            print("Sending email to:", recipient)
-
             msg = Message(
                 subject=subject,
-                recipients=[recipient]
+                recipients=[username],
+                body=body
             )
-            msg.body = body
-
             mail.send(msg)
-
-            print("EMAIL SENT SUCCESSFULLY")
-            logger.info("Alert email sent")
+            logger.info("Alert email sent successfully")
 
     except Exception as e:
-        print("EMAIL ERROR:", e)
         logger.error(f"Email failed: {e}")
 
 # Background metrics + alert monitoring
 def update_metrics():
     while True:
-        cpu = psutil.cpu_percent(interval=1)
-        memory = psutil.virtual_memory().percent
-        disk = psutil.disk_usage('/').percent
+        try:
+            cpu = psutil.cpu_percent(interval=1)
+            memory = psutil.virtual_memory().percent
+            disk = psutil.disk_usage('/').percent
 
-        cpu_usage.set(cpu)
-        memory_usage.set(memory)
-        disk_usage.set(disk)
+            cpu_usage.set(cpu)
+            memory_usage.set(memory)
+            disk_usage.set(disk)
 
-        # Alert condition
-        if cpu > 80:
-            send_alert_email(
-                "High CPU Alert",
-                f"CPU usage is {cpu}%"
-            )
+            logger.info(f"CPU: {cpu}%, Memory: {memory}%, Disk: {disk}%")
 
-        time.sleep(1)
+            # Alert condition
+            if cpu > 80:
+                send_alert_email(
+                    "High CPU Alert",
+                    f"CPU usage is {cpu}%"
+                )
+
+            time.sleep(2)
+
+        except Exception as e:
+            logger.error(f"Metrics error: {e}")
+            time.sleep(5)
 
 # Start background thread
 thread = threading.Thread(target=update_metrics)
@@ -162,7 +166,7 @@ def health():
 @app.route("/test-email")
 def test_email():
     send_alert_email("Test Alert", "Email is working!")
-    return "Email sent!"
+    return "Email test triggered"
 
 # Run app
 if __name__ == "__main__":
