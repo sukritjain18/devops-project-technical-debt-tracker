@@ -1,4 +1,5 @@
-flask                          
+flask  
+gunicorn                        
 python-dotenv                
 pytest                         
 pytest-cov                      
