@@ -166,7 +166,7 @@ def health():
 @app.route("/test-email")
 def test_email():
     send_alert_email("Test Alert", "Email is working!")
-    return "Email test triggered"
+    return "Email sent!"
 
 # Run app
 if __name__ == "__main__":
