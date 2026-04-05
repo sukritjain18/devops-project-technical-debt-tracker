@@ -2,12 +2,12 @@ from flask import Flask, jsonify, request, abort, Response
 import os
 import psutil
 import logging
+import smtplib
+from email.mime.text import MIMEText
 from dotenv import load_dotenv
-from logging.handlers import TimedRotatingFileHandler
 from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
 import threading
 import time
-import requests
 
 # ------------------ LOAD ENV ------------------
 load_dotenv()
@@ -29,10 +29,11 @@ if logger.hasHandlers():
 
 formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
 
-# File logging only in local/development (Render filesystem is ephemeral)
+# File logging only in local development (Render filesystem is ephemeral)
 if APP_ENV == "development":
     if not os.path.exists("logs"):
         os.makedirs("logs")
+    from logging.handlers import TimedRotatingFileHandler
     file_handler = TimedRotatingFileHandler(
         "logs/application.log",
         when="midnight",
@@ -56,75 +57,56 @@ memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
 # ------------------ ALERT CONTROL ------------------
+alert_lock = threading.Lock()
 last_alert_time = 0
-ALERT_COOLDOWN = 60  # seconds
+ALERT_COOLDOWN = 300  # 5 minutes between alerts
 
 def should_send_alert():
     global last_alert_time
-    now = time.time()
-    if now - last_alert_time > ALERT_COOLDOWN:
-        last_alert_time = now
-        return True
-    return False
+    with alert_lock:
+        now = time.time()
+        if now - last_alert_time > ALERT_COOLDOWN:
+            last_alert_time = now
+            return True
+        return False
 
-# ------------------ EMAIL FUNCTION ------------------
+# ------------------ EMAIL FUNCTION (Gmail SMTP) ------------------
 
 def send_alert_email(subject, body):
-    api_key = os.getenv("SENDGRID_API_KEY")
-    sender_email = os.getenv("MAIL_USERNAME")
-    receiver_email = os.getenv("MAIL_RECEIVER", sender_email)  # separate receiver, fallback to sender
+    sender = os.getenv("MAIL_USERNAME")
+    password = os.getenv("MAIL_PASSWORD")  # Gmail App Password
+    receiver = os.getenv("MAIL_RECEIVER", sender)
 
-    if not api_key:
-        logger.warning("⚠️ SendGrid API key not configured (SENDGRID_API_KEY)")
+    if not sender:
+        logger.warning("⚠️ MAIL_USERNAME not configured")
         return
 
-    if not sender_email:
-        logger.warning("⚠️ Sender email not configured (MAIL_USERNAME)")
+    if not password:
+        logger.warning("⚠️ MAIL_PASSWORD not configured")
         return
 
-    if not receiver_email:
-        logger.warning("⚠️ Receiver email not configured (MAIL_RECEIVER)")
+    if not receiver:
+        logger.warning("⚠️ MAIL_RECEIVER not configured")
         return
-
-    data = {
-        "personalizations": [{
-            "to": [{"email": receiver_email}],
-            "subject": subject
-        }],
-        "from": {"email": sender_email},
-        "content": [{
-            "type": "text/plain",
-            "value": body
-        }]
-    }
-
-    headers = {
-        "Authorization": f"Bearer {api_key}",
-        "Content-Type": "application/json"
-    }
 
     try:
-        response = requests.post(
-            "https://api.sendgrid.com/v3/mail/send",
-            json=data,
-            headers=headers,
-            timeout=10
-        )
+        msg = MIMEText(body)
+        msg["Subject"] = subject
+        msg["From"] = sender
+        msg["To"] = receiver
 
-        if response.status_code == 202:
-            logger.info("✅ Email sent via SendGrid to %s", receiver_email)
-        else:
-            logger.error(
-                "❌ SendGrid failed: status=%s body=%s",
-                response.status_code,
-                response.text
-            )
+        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
+            server.starttls()
+            server.login(sender, password)
+            server.sendmail(sender, receiver, msg.as_string())
 
-    except requests.exceptions.Timeout:
-        logger.error("⏳ SendGrid request timed out")
+        logger.info("✅ Email sent to %s", receiver)
 
-    except requests.exceptions.RequestException as e:
-        logger.error("❌ SendGrid request error: %s", e)
+    except smtplib.SMTPAuthenticationError:
+        logger.error("❌ Gmail authentication failed — check MAIL_USERNAME and MAIL_PASSWORD (use App Password)")
+
+    except smtplib.SMTPException as e:
+        logger.error("❌ SMTP error: %s", e)
 
     except Exception as e:
         logger.error("❌ Unexpected email error: %s", e)
@@ -163,8 +145,8 @@ def update_metrics():
                 if should_send_alert():
                     logger.warning("⚠️ High CPU detected (%.1f%%), sending alert...", cpu)
                     send_email_async(
-                        "🚨 High CPU Alert",
-                        f"CPU Usage is critically high!\n\nCPU: {cpu:.1f}%\nMemory: {memory:.1f}%\nDisk: {disk:.1f}%"
+                        "🚨 High CPU Alert - Technical Debt Tracker",
+                        f"CPU usage is critically high!\n\nCPU: {cpu:.1f}%\nMemory: {memory:.1f}%\nDisk: {disk:.1f}%\n\nEnvironment: {APP_ENV}"
                     )
 
             time.sleep(2)
@@ -222,7 +204,7 @@ def health():
 
 @app.route("/test-email")
 def test_email():
-    receiver = os.getenv("MAIL_RECEIVER", os.getenv("MAIL_USERNAME", "not set"))
+    receiver = os.getenv("MAIL_RECEIVER", os.getenv("MAIL_USERNAME", "not configured"))
     logger.info("📧 Test email triggered, sending to %s", receiver)
     send_email_async(
         "✅ Test Alert - Technical Debt Tracker",
@@ -231,7 +213,7 @@ def test_email():
     return jsonify({
         "message": "Email task queued",
         "receiver": receiver,
-        "note": "Check SendGrid Activity Feed to confirm delivery"
+        "note": "Check Render logs to confirm delivery"
     }), 200
 
 # ------------------ RUN ------------------
