@@ -83,32 +83,46 @@ def should_send_alert():
 
 # ------------------ EMAIL FUNCTION ------------------
 
-def send_alert_email(subject, body, retries=3):
+import requests
+
+def send_alert_email(subject, body):
+    api_key = os.getenv("SENDGRID_API_KEY")
+
+    if not api_key:
+        logger.warning("SendGrid not configured")
+        return
+
+    data = {
+        "personalizations": [{
+            "to": [{"email": os.getenv("MAIL_USERNAME")}],
+            "subject": subject
+        }],
+        "from": {"email": os.getenv("MAIL_USERNAME")},
+        "content": [{
+            "type": "text/plain",
+            "value": body
+        }]
+    }
+
+    headers = {
+        "Authorization": f"Bearer {api_key}",
+        "Content-Type": "application/json"
+    }
+
     try:
-        username = os.getenv("MAIL_USERNAME")
+        response = requests.post(
+            "https://api.sendgrid.com/v3/mail/send",
+            json=data,
+            headers=headers
+        )
 
-        if not username:
-            logger.warning("Email not configured, skipping alert")
-            return
-
-        with app.app_context():
-            msg = Message(
-                subject=subject,
-                recipients=[username],
-                body=body
-            )
-
-            for i in range(retries):
-                try:
-                    mail.send(msg)
-                    logger.info("✅ Alert email sent successfully")
-                    return
-                except Exception as e:
-                    logger.error(f"❌ Email failed (attempt {i+1}): {e}")
-                    time.sleep(2)
+        if response.status_code == 202:
+            logger.info("✅ Email sent via SendGrid")
+        else:
+            logger.error(f"❌ SendGrid failed: {response.text}")
 
     except Exception as e:
-        logger.error(f"Email system error: {e}")
+        logger.error(f"SendGrid error: {e}")
 
 # ------------------ METRICS MONITOR ------------------
 

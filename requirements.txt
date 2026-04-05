@@ -9,3 +9,4 @@ flake8
 psutil     
 prometheus_client>=0.16.0
 Flask-Mail
+requests
