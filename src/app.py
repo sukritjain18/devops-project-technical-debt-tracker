@@ -70,7 +70,7 @@ def should_send_alert():
             return True
         return False
 
-# ------------------ EMAIL FUNCTION (Gmail SMTP) ------------------
+# ------------------ EMAIL FUNCTION (Gmail SMTP SSL port 465) ------------------
 
 def send_alert_email(subject, body):
     sender = os.getenv("MAIL_USERNAME")
@@ -95,8 +95,8 @@ def send_alert_email(subject, body):
         msg["From"] = sender
         msg["To"] = receiver
 
-        with smtplib.SMTP("smtp.gmail.com", 587, timeout=10) as server:
-            server.starttls()
+        # Using SSL on port 465 instead of TLS on port 587
+        with smtplib.SMTP_SSL("smtp.gmail.com", 465, timeout=10) as server:
             server.login(sender, password)
             server.sendmail(sender, receiver, msg.as_string())
 
