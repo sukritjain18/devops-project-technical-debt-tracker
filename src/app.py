@@ -68,13 +68,26 @@ cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
 memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
-# Email alert function (SAFE VERSION)
-def send_alert_email(subject, body):
+# ------------------ ALERT CONTROL ------------------
+
+last_alert_time = 0
+ALERT_COOLDOWN = 60  # seconds
+
+def should_send_alert():
+    global last_alert_time
+    now = time.time()
+    if now - last_alert_time > ALERT_COOLDOWN:
+        last_alert_time = now
+        return True
+    return False
+
+# ------------------ EMAIL FUNCTION ------------------
+
+def send_alert_email(subject, body, retries=3):
     try:
         username = os.getenv("MAIL_USERNAME")
-        password = os.getenv("MAIL_PASSWORD")
 
-        if not username or not password:
+        if not username:
             logger.warning("Email not configured, skipping alert")
             return
 
@@ -84,13 +97,21 @@ def send_alert_email(subject, body):
                 recipients=[username],
                 body=body
             )
-            mail.send(msg)
-            logger.info("Alert email sent successfully")
+
+            for i in range(retries):
+                try:
+                    mail.send(msg)
+                    logger.info("✅ Alert email sent successfully")
+                    return
+                except Exception as e:
+                    logger.error(f"❌ Email failed (attempt {i+1}): {e}")
+                    time.sleep(2)
 
     except Exception as e:
-        logger.error(f"Email failed: {e}")
+        logger.error(f"Email system error: {e}")
 
-# Background metrics + alert monitoring
+# ------------------ METRICS MONITOR ------------------
+
 def update_metrics():
     while True:
         try:
@@ -106,10 +127,12 @@ def update_metrics():
 
             # Alert condition
             if cpu > 80:
-                send_alert_email(
-                    "High CPU Alert",
-                    f"CPU usage is {cpu}%"
-                )
+                if should_send_alert():
+                    logger.info("⚠️ High CPU detected, sending alert...")
+                    send_alert_email(
+                        "🚨 High CPU Alert",
+                        f"CPU usage is {cpu}%\nMemory: {memory}%\nDisk: {disk}%"
+                    )
 
             time.sleep(2)
 
@@ -118,11 +141,11 @@ def update_metrics():
             time.sleep(5)
 
 # Start background thread
-thread = threading.Thread(target=update_metrics)
-thread.daemon = True
+thread = threading.Thread(target=update_metrics, daemon=True)
 thread.start()
 
-# Routes
+# ------------------ ROUTES ------------------
+
 @app.route("/")
 def home():
     logger.info("Home endpoint accessed")
@@ -169,10 +192,9 @@ def test_email():
     send_alert_email("Test Alert", "Email is working!")
     return "Email sent!"
 
-# Run app
+# ------------------ RUN APP ------------------
+
 if __name__ == "__main__":
-    logger.info("Starting Flask server")
-
+    logger.info("🚀 Starting Flask server")
     port = int(os.environ.get("PORT", 8080))
-
     app.run(host="0.0.0.0", port=port, debug=False)
