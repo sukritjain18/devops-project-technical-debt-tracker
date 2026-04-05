@@ -1,0 +1,38 @@
+2026-03-20 01:08:13,534 - INFO - Application started
+2026-03-20 01:08:13,541 - INFO - Starting Flask server on port 8080
+2026-03-20 01:08:13,605 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.162.100.69:8080
+2026-03-20 01:08:13,606 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 01:08:20,670 - INFO - Home endpoint accessed
+2026-03-20 01:08:20,673 - INFO - 127.0.0.1 - - [20/Mar/2026 01:08:20] "GET / HTTP/1.1" 200 -
+2026-03-20 01:08:20,730 - INFO - 127.0.0.1 - - [20/Mar/2026 01:08:20] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-20 15:10:38,777 - INFO - Application started
+2026-03-20 15:10:38,786 - INFO - Starting Flask server on port 8080
+2026-03-20 15:10:38,874 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.230:8080
+2026-03-20 15:10:38,874 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 15:10:51,479 - INFO - Alert email sent
+2026-03-20 15:11:39,599 - INFO - 127.0.0.1 - - [20/Mar/2026 15:11:39] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-20 15:11:41,521 - INFO - 127.0.0.1 - - [20/Mar/2026 15:11:41] "GET /metrics HTTP/1.1" 200 -
+2026-03-20 15:13:16,148 - INFO - Secure API accessed successfully
+2026-03-20 15:13:16,150 - INFO - 127.0.0.1 - - [20/Mar/2026 15:13:16] "GET /secure-api HTTP/1.1" 200 -
+2026-03-20 15:13:29,327 - INFO - Alert email sent
+2026-03-20 15:13:29,328 - INFO - 127.0.0.1 - - [20/Mar/2026 15:13:29] "GET /test-email HTTP/1.1" 200 -
+2026-03-20 15:13:29,499 - INFO - 127.0.0.1 - - [20/Mar/2026 15:13:29] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2026-03-20 15:31:32,418 - INFO - Application started
+2026-03-20 15:31:32,421 - INFO - Starting Flask server on port 8080
+2026-03-20 15:31:32,448 - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8080
+ * Running on http://10.7.0.230:8080
+2026-03-20 15:31:32,449 - INFO - [33mPress CTRL+C to quit[0m
+2026-03-20 15:31:34,951 - INFO - Home endpoint accessed
+2026-03-20 15:31:34,952 - INFO - 127.0.0.1 - - [20/Mar/2026 15:31:34] "GET / HTTP/1.1" 200 -
+2026-03-20 15:31:54,824 - INFO - 127.0.0.1 - - [20/Mar/2026 15:31:54] "GET /metrics HTTP/1.1" 200 -
+2026-03-20 15:32:29,129 - INFO - Alert email sent
+2026-03-20 15:32:29,130 - INFO - 127.0.0.1 - - [20/Mar/2026 15:32:29] "GET /test-email HTTP/1.1" 200 -
+2026-03-20 15:52:05,855 - ERROR - Email failed: [Errno 11001] getaddrinfo failed
