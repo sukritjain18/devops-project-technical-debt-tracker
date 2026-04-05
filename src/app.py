@@ -216,8 +216,7 @@ def health():
 @app.route("/test-email")
 def test_email():
     send_email_async("Test Alert", "Email is working!")
-    return {"status": "Email triggered"}, 200
-
+    return "Email sent!", 200
 # ------------------ RUN ------------------
 
 if __name__ == "__main__":
