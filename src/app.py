@@ -7,31 +7,20 @@ from logging.handlers import TimedRotatingFileHandler
 from prometheus_client import Gauge, generate_latest, CONTENT_TYPE_LATEST
 import threading
 import time
-from flask_mail import Mail, Message
+import requests
 
-# Load environment variables
+# ------------------ LOAD ENV ------------------
 load_dotenv()
 
 app = Flask(__name__)
 
-# Environment variables
+# ------------------ ENV VARIABLES ------------------
 APP_ENV = os.getenv("APP_ENV", "development")
 DB_HOST = os.getenv("DB_HOST", "localhost")
 DB_PORT = os.getenv("DB_PORT", "5432")
 API_KEY = os.getenv("API_KEY", "default-api-key")
 
-# Email configuration
-app.config['MAIL_SERVER'] = 'smtp.gmail.com'
-app.config['MAIL_PORT'] = 465
-app.config['MAIL_USE_TLS'] = False
-app.config['MAIL_USE_SSL'] = True
-app.config['MAIL_USERNAME'] = os.getenv("MAIL_USERNAME")
-app.config['MAIL_PASSWORD'] = os.getenv("MAIL_PASSWORD")
-app.config['MAIL_DEFAULT_SENDER'] = os.getenv("MAIL_USERNAME")
-
-mail = Mail(app)
-
-# Logging setup
+# ------------------ LOGGING ------------------
 if not os.path.exists("logs"):
     os.makedirs("logs")
 
@@ -61,15 +50,14 @@ console_handler.setFormatter(formatter)
 logger.addHandler(file_handler)
 logger.addHandler(console_handler)
 
-logger.info("Application started")
+logger.info("🚀 Application started")
 
-# Prometheus metrics
+# ------------------ PROMETHEUS METRICS ------------------
 cpu_usage = Gauge('cpu_usage_percent', 'CPU usage percent')
 memory_usage = Gauge('memory_usage_percent', 'Memory usage percent')
 disk_usage = Gauge('disk_usage_percent', 'Disk usage percent')
 
 # ------------------ ALERT CONTROL ------------------
-
 last_alert_time = 0
 ALERT_COOLDOWN = 60  # seconds
 
@@ -83,21 +71,24 @@ def should_send_alert():
 
 # ------------------ EMAIL FUNCTION ------------------
 
-import requests
-
 def send_alert_email(subject, body):
     api_key = os.getenv("SENDGRID_API_KEY")
+    sender_email = os.getenv("MAIL_USERNAME")
 
     if not api_key:
-        logger.warning("SendGrid not configured")
+        logger.warning("⚠️ SendGrid API key not configured")
+        return
+
+    if not sender_email:
+        logger.warning("⚠️ Sender email not configured")
         return
 
     data = {
         "personalizations": [{
-            "to": [{"email": os.getenv("MAIL_USERNAME")}],
+            "to": [{"email": sender_email}],
             "subject": subject
         }],
-        "from": {"email": os.getenv("MAIL_USERNAME")},
+        "from": {"email": sender_email},
         "content": [{
             "type": "text/plain",
             "value": body
@@ -113,16 +104,37 @@ def send_alert_email(subject, body):
         response = requests.post(
             "https://api.sendgrid.com/v3/mail/send",
             json=data,
-            headers=headers
+            headers=headers,
+            timeout=5
         )
 
         if response.status_code == 202:
             logger.info("✅ Email sent via SendGrid")
         else:
-            logger.error(f"❌ SendGrid failed: {response.text}")
+            logger.error(f"❌ SendGrid failed: {response.status_code} - {response.text}")
+
+    except requests.exceptions.Timeout:
+        logger.error("⏳ SendGrid request timed out")
+
+    except requests.exceptions.RequestException as e:
+        logger.error(f"❌ SendGrid request error: {e}")
 
     except Exception as e:
-        logger.error(f"SendGrid error: {e}")
+        logger.error(f"❌ Unexpected email error: {e}")
+
+
+def send_email_async(subject, body):
+    try:
+        thread = threading.Thread(
+            target=send_alert_email,
+            args=(subject, body),
+            daemon=True
+        )
+        thread.start()
+        logger.info("📨 Email task started in background")
+
+    except Exception as e:
+        logger.error(f"❌ Failed to start email thread: {e}")
 
 # ------------------ METRICS MONITOR ------------------
 
@@ -139,13 +151,13 @@ def update_metrics():
 
             logger.info(f"CPU: {cpu}%, Memory: {memory}%, Disk: {disk}%")
 
-            # Alert condition
+            # ALERT CONDITION
             if cpu > 80:
                 if should_send_alert():
                     logger.info("⚠️ High CPU detected, sending alert...")
-                    send_alert_email(
+                    send_email_async(
                         "🚨 High CPU Alert",
-                        f"CPU usage is {cpu}%\nMemory: {memory}%\nDisk: {disk}%"
+                        f"CPU: {cpu}%\nMemory: {memory}%\nDisk: {disk}%"
                     )
 
             time.sleep(2)
@@ -203,10 +215,10 @@ def health():
 
 @app.route("/test-email")
 def test_email():
-    send_alert_email("Test Alert", "Email is working!")
-    return "Email sent!"
+    send_email_async("Test Alert", "Email is working!")
+    return {"status": "Email triggered"}, 200
 
-# ------------------ RUN APP ------------------
+# ------------------ RUN ------------------
 
 if __name__ == "__main__":
     logger.info("🚀 Starting Flask server")
