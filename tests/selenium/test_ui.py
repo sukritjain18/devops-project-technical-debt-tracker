@@ -32,9 +32,9 @@ def test_homepage_and_api():
     assert metrics_resp.status_code == 200
     assert "cpu_usage_percent" in metrics_resp.text
 
-    # Trigger /test-email endpoint 
+    # Trigger /test-email endpoint
     email_resp = requests.get("http://localhost:8080/test-email")
     assert email_resp.status_code == 200
-    assert "Email sent!" in email_resp.text
+    assert "Email task queued" in email_resp.text  # updated to match new JSON response
 
     driver.quit()
